@@ -1,9 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+
+const reviews = [
+  {
+    name: "Nghia",
+    img: "",
+    stars: 5,
+    premiumUser: true,
+    date: "05/09/2022",
+  },
+  {
+    name: "Trong Nghia",
+    img: "",
+    stars: 2,
+    premiumUser: true,
+    date: "15/02/2022",
+  },
+  {
+    name: "Anh",
+    img: "",
+    stars: 4,
+    premiumUser: true,
+    date: "01/10/2022",
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <div className="App">
@@ -28,7 +52,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
