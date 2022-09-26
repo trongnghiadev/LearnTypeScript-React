@@ -82,6 +82,12 @@ function handleFile(text: string, callback: () => void): void {
   callback();
 }
 // Function params with params
+function handleFilterArray(
+  number: number[],
+  fillter: (n: number) => number
+): number[] {
+  return number.map((i) => fillter(i));
+}
 // Function as types
 type UpdateArray = (n: number) => number;
 function handleUpdateArray(numbers: number[], update: UpdateArray): number[] {
