@@ -1,58 +1,90 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
+import React, { useReducer, useRef } from "react";
+const Heading = ({ title }: { title?: string }) => {
+  return <h2 className="font-primary font-bold text-2xl mb-5 ">{title}</h2>;
+};
 
-const reviews = [
+type ActionType =
+  | { type: "ADD"; text: string }
+  | { type: "REMOVE"; id: number };
+
+interface Todo {
+  id: number;
+  text: string;
+}
+const todoReducer = (state: Todo[], action: ActionType) => {
+  switch (action.type) {
+    case "ADD":
+      return [
+        ...state,
+        {
+          id: state.length,
+          text: action.text,
+        },
+      ];
+    case "REMOVE":
+      return state.filter((todo: Todo) => todo.id !== action.id);
+    default:
+      throw new Error("");
+  }
+};
+const initialState: Todo[] = [
   {
-    name: "Nghia",
-    img: "",
-    stars: 5,
-    premiumUser: true,
-    date: "05/09/2022",
-  },
-  {
-    name: "Trong Nghia",
-    img: "",
-    stars: 2,
-    premiumUser: true,
-    date: "15/02/2022",
-  },
-  {
-    name: "Anh",
-    img: "",
-    stars: 4,
-    premiumUser: true,
-    date: "01/10/2022",
+    id: 2,
+    text: "Learn Ts",
   },
 ];
+const App = () => {
+  const [todos, dispatch] = useReducer(todoReducer, initialState);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const onRemoveTodo = (todoID: number) => {
+    dispatch({
+      type: "REMOVE",
+      id: todoID,
+    });
+  };
 
-function App() {
-  const [count, setCount] = useState(0);
-
+  const onAddtodo = () => {
+    if (inputRef.current && inputRef.current.value != "") {
+      dispatch({
+        type: "ADD",
+        text: inputRef.current.value,
+      });
+      inputRef.current.value = "";
+    }
+  };
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <Heading title="Todo App"></Heading>
+      <div className="max-w-sm">
+        <div className="mb-5">
+          {todos.map((todo) => (
+            <div className="flex items-center gap-x-3 p-5" key={todo.id}>
+              <span>{todo.text}</span>
+              <button
+                onClick={() => onRemoveTodo(todo.id)}
+                className="p-2 rounded-lg bg-red-600 text-white font-medium text-sm"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-x-5">
+          <input
+            type="text"
+            className="p-4 boder border-slate-200 rounded-lg"
+            ref={inputRef}
+          />
+          <button
+            onClick={onAddtodo}
+            className="p-4 rounded-lg bg-blue-500 text-white text-center"
+          >
+            Add todo
+          </button>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
-}
+};
 
 export default App;
