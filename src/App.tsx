@@ -1,8 +1,24 @@
-import React, { useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 const Heading = ({ title }: { title?: string }) => {
   return <h2 className="font-primary font-bold text-2xl mb-5 ">{title}</h2>;
 };
+//useState
 
+interface Data {
+  id: number;
+  text: string;
+}
+
+const List = ({ items }: { items?: string[] }) => {
+  return (
+    <div>
+      {items?.map((items) => (
+        <div key={items}>{items}</div>
+      ))}
+    </div>
+  );
+};
+//
 type ActionType =
   | { type: "ADD"; text: string }
   | { type: "REMOVE"; id: number };
@@ -34,6 +50,16 @@ const initialState: Todo[] = [
   },
 ];
 const App = () => {
+  // useState
+  const [data, setData] = useState<Data | null>(null);
+  useEffect(() => {
+    fetch("/data.json")
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+      });
+  }, []);
+  //
   const [todos, dispatch] = useReducer(todoReducer, initialState);
   const inputRef = useRef<HTMLInputElement>(null);
   const onRemoveTodo = (todoID: number) => {
@@ -55,6 +81,8 @@ const App = () => {
   return (
     <div>
       <Heading title="Todo App"></Heading>
+      {JSON.stringify(data)}
+      <List items={["mai", "van", "trong", "nghia"]}></List>
       <div className="max-w-sm">
         <div className="mb-5">
           {todos.map((todo) => (
